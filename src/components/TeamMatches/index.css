@@ -75,3 +75,9 @@
     margin-top: 32px;
   }
 }
+.button {
+  height: 60px;
+  width: 80px;
+  background-color: white;
+  color: black;
+}

@@ -4,6 +4,8 @@ import './index.css'
 import Loader from 'react-loader-spinner'
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css'
 import {Component} from 'react'
+import {Link} from 'react-router-dom'
+import {PieChart, Pie} from 'recharts'
 import LatestMatch from '../LatestMatch'
 import MatchCard from '../MatchCard'
 
@@ -60,10 +62,50 @@ class TeamMatches extends Component {
     const {teamBannerUrl, latestMatchDetails} = matchesData
     return (
       <div className="team-matches-container">
-        <img src={teamBannerUrl} alt="img" className="team-banner" />
+        <img src={teamBannerUrl} alt="team Banner" className="team-banner" />
+        <div>{this.renderTeamStats()}</div>
         <LatestMatch latestMatch={latestMatchDetails} />
         {this.renderRecentMatchesList()}
       </div>
+    )
+  }
+
+  renderTeamStats = () => {
+    let won = 0
+    let loss = 0
+    let draw = 0
+
+    const {matchesData} = this.state
+    const {recentMatches} = matchesData
+    for (let i = 0; i < recentMatches.length; i += 1) {
+      console.log(recentMatches[i])
+      const result = recentMatches[i].matchStatus
+      if (result === 'Won') {
+        won = won + 1
+      } else if (result === 'Loss') {
+        loss = loss + 1
+      } else {
+        draw = draw + 1
+      }
+    }
+    const data = [
+      {name: 'Won', students: won},
+      {name: 'Loss', students: loss},
+      {name: 'Draw', students: draw},
+    ]
+
+    return (
+      <PieChart width={730} height={250}>
+        <Pie
+          data={data}
+          dataKey="students"
+          nameKey="name"
+          cx="50%"
+          cy="50%"
+          outerRadius={250}
+          fill="#8884d8"
+        />
+      </PieChart>
     )
   }
 
@@ -80,7 +122,7 @@ class TeamMatches extends Component {
   }
 
   renderLoader = () => (
-    <div testid="loader" className="loader-container">
+    <div className="loader-container" testid="loader">
       <Loader type="BallTriangle" color="#00BFFF" height={80} width={80} />
     </div>
   )
@@ -92,6 +134,9 @@ class TeamMatches extends Component {
     const {id} = params
     return (
       <div className={`app-team-matches-container ${id}`}>
+        <div>
+          <Link to="/">Back</Link>
+        </div>
         {isLoading ? this.renderLoader() : this.renderTeamMatches()}
       </div>
     )
