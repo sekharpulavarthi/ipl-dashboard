@@ -1,83 +1,129 @@
 /* Write your CSS here */
-/* Write your CSS here */
-.app-team-matches-container {
+.app-team-container {
   min-height: 100vh;
   display: flex;
+  align-items: center;
   justify-content: center;
 }
+.rcb {
+  background: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    from(#1e293b),
+    to(#a4261d)
+  );
+  background: linear-gradient(0deg, #1e293b, #a4261d);
+}
 
-.team-matches-container {
+.kkr {
+  background: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    from(#1e293b),
+    to(#5755a7)
+  );
+  background: linear-gradient(0deg, #1e293b, #5755a7);
+}
+
+.kxp {
+  background: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    from(#1e293b),
+    to(#d91c1f)
+  );
+  background: linear-gradient(0deg, #1e293b, #d91c1f);
+}
+
+.csk {
+  background: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    from(#1e293b),
+    to(#f7db00)
+  );
+  background: linear-gradient(0deg, #1e293b, #f7db00);
+}
+
+.rr {
+  background: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    from(#1e293b),
+    to(#da237b)
+  );
+  background: linear-gradient(0deg, #1e293b, #da237b);
+}
+
+.mi {
+  background: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    from(#1e293b),
+    to(#13418b)
+  );
+  background: linear-gradient(0deg, #1e293b, #13418b);
+}
+
+.srh {
+  background: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    from(#1e293b),
+    to(#f26d22)
+  );
+  background: linear-gradient(0deg, #1e293b, #f26d22);
+}
+
+.dc {
+  background: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    from(#1e293b),
+    to(#4f5db0)
+  );
+  background: linear-gradient(0deg, #1e293b, #4f5db0);
+}
+.team-match-container {
   width: 90%;
   margin-top: 40px;
-  max-width: 500px;
+  max-width: 1120px;
 }
-
-@media screen and (min-width: 768px) {
-  .team-matches-container {
-    margin-top: 56px;
-    max-width: 1110px;
-  }
-}
-.team-banner {
+.banner-image {
   width: 100%;
 }
-
-.loader-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.RCB {
-  background: linear-gradient(to top, #1e293b, #a4261d);
-}
-
-.KKR {
-  background: linear-gradient(to top, #1e293b, #5755a7);
-}
-
-.KXP {
-  background: linear-gradient(to top, #1e293b, #d91c1f);
-}
-
-.CSK {
-  background: linear-gradient(to top, #1e293b, #f7db00);
-}
-
-.RR {
-  background: linear-gradient(to top, #1e293b, #da237b);
-}
-
-.MI {
-  background: linear-gradient(to top, #1e293b, #13418b);
-}
-.SH {
-  background: linear-gradient(to top, #1e293b, #f26d22);
-}
-.DC {
-  background: linear-gradient(to top, #1e293b, #4f5db0);
-}
-
-.recent-matches-list {
+.ul-container {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 24px;
-  width: 100%;
+  justify-content: space-between;
+padding-left: 0;
+margin-top: 24px
 }
-@media screen and (max-width: 767px) {
-  .recent-matches-list {
-    padding-left: 0px;
-  }
+.chart-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  margin-bottom: 10px;
 }
-@media screen and (min-width: 768px) {
-  .recent-matches-list {
-    margin-top: 32px;
-  }
+.back-btn {
+  background-color: #007bff; /* Blue background color */
+  color: #ffffff; /* White text color */
+  padding: 10px 20px; /* Padding around the button */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Cursor style */
+  font-size: 16px; /* Font size */
 }
-.button {
-  height: 60px;
-  width: 80px;
-  background-color: white;
-  color: black;
+
+.back-btn:hover {
+  background-color: #0056b3; /* Darker blue color on hover */
 }

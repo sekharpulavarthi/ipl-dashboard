@@ -1,5 +1,4 @@
 /* Write your CSS here */
-/* Write your CSS here */
 .not-found-route-container {
   display: flex;
   flex-direction: column;
@@ -15,6 +14,7 @@
     background-image: url('https://assets.ccbp.in/frontend/react-js/ipl-dashboard-lg-bg.png');
   }
 }
+
 .not-found-heading {
   color: #ffffff;
   font-family: 'Bree Serif';

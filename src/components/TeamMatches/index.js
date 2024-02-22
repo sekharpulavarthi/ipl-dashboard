@@ -1,142 +1,204 @@
 // Write your code here
-// Write your code here
+import {Link} from 'react-router-dom'
+import {PieChart, Pie, Cell, Legend} from 'recharts'
 import './index.css'
 import Loader from 'react-loader-spinner'
-import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css'
+
 import {Component} from 'react'
-import {Link} from 'react-router-dom'
-import {PieChart, Pie} from 'recharts'
-import LatestMatch from '../LatestMatch'
 import MatchCard from '../MatchCard'
+import LatestMatch from '../LatestMatch'
+
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css'
 
 class TeamMatches extends Component {
   state = {
-    matchesData: [],
+    teamMatchList: {},
     isLoading: true,
+    matchStatistics: {
+      wins: 0,
+      losses: 0,
+      draws: 0,
+    },
   }
 
   componentDidMount() {
-    this.getTeamMatches()
+    this.getTeamMatchDetails()
   }
 
-  getTeamMatches = async () => {
+  getTeamMatchDetails = async () => {
     const {match} = this.props
     const {params} = match
     const {id} = params
     const response = await fetch(`https://apis.ccbp.in/ipl/${id}`)
-    const fetchedData = await response.json()
-    const updatedData = {
-      teamBannerUrl: fetchedData.team_banner_url,
+    const data = await response.json()
+
+    const updatedMatch = {
+      teamBannerUrl: data.team_banner_url,
       latestMatchDetails: {
-        id: fetchedData.latest_match_details.id,
-        competingTeam: fetchedData.latest_match_details.competing_team,
-        competingTeamLogo: fetchedData.latest_match_details.competing_team_logo,
-        date: fetchedData.latest_match_details.date,
-        firstInnings: fetchedData.latest_match_details.first_innings,
-        manOfTheMatch: fetchedData.latest_match_details.man_of_the_match,
-        matchStatus: fetchedData.latest_match_details.match_status,
-        result: fetchedData.latest_match_details.result,
-        secondInnings: fetchedData.latest_match_details.second_innings,
-        umpires: fetchedData.latest_match_details.umpires,
-        venue: fetchedData.latest_match_details.venue,
+        umpires: data.latest_match_details.umpires,
+        result: data.latest_match_details.result,
+        manOfTheMatch: data.latest_match_details.man_of_the_match,
+        id: data.latest_match_details.id,
+        date: data.latest_match_details.date,
+        venue: data.latest_match_details.venue,
+        competingTeam: data.latest_match_details.competing_team,
+        competingTeamLogo: data.latest_match_details.competing_team_logo,
+        firstInnings: data.latest_match_details.first_innings,
+        secondInnings: data.latest_match_details.second_innings,
+        matchStatus: data.latest_match_details.match_status,
       },
-      recentMatches: fetchedData.recent_matches.map(recentMatch => ({
-        umpires: recentMatch.umpires,
-        result: recentMatch.result,
-        manOfTheMatch: recentMatch.man_of_the_match,
-        id: recentMatch.id,
-        date: recentMatch.date,
-        venue: recentMatch.venue,
-        competingTeam: recentMatch.competing_team,
-        competingTeamLogo: recentMatch.competing_team_logo,
-        firstInnings: recentMatch.first_innings,
-        secondInnings: recentMatch.second_innings,
-        matchStatus: recentMatch.match_status,
+      recentMatches: data.recent_matches.map(each => ({
+        umpires: each.umpires,
+        result: each.result,
+        manOfTheMatch: each.man_of_the_match,
+        id: each.id,
+        date: each.date,
+        venue: each.venue,
+        competingTeam: each.competing_team,
+        competingTeamLogo: each.competing_team_logo,
+        firstInnings: each.first_innings,
+        secondInnings: each.second_innings,
+        matchStatus: each.match_status,
       })),
     }
-    this.setState({matchesData: updatedData, isLoading: false})
+
+    // Calculate match statistics here
+    const matchStatistics = this.calculateMatchStatistics(
+      updatedMatch.recentMatches,
+    )
+    this.setState({
+      teamMatchList: updatedMatch,
+      isLoading: false,
+      matchStatistics,
+    })
+  }
+
+  calculateMatchStatistics = matches => {
+    let wins = 0
+    let losses = 0
+    let draws = 0
+    console.log(matches)
+    matches.forEach(match => {
+      if (match.matchStatus === 'Won') {
+        wins += 1
+      } else if (match.matchStatus === 'Lost') {
+        losses += 1
+      } else {
+        draws += 1
+      }
+    })
+
+    return {wins, losses, draws}
+  }
+
+  getTeamClassName = () => {
+    const {match} = this.props
+    const {params} = match
+    const {id} = params
+
+    switch (id) {
+      case 'RCB':
+        return 'rcb'
+      case 'KKR':
+        return 'kkr'
+      case 'KXP':
+        return 'kxp'
+      case 'CSK':
+        return 'csk'
+      case 'RR':
+        return 'rr'
+      case 'MI':
+        return 'mi'
+      case 'SH':
+        return 'srh'
+      case 'DC':
+        return 'dc'
+      default:
+        return ''
+    }
   }
 
   renderTeamMatches = () => {
-    const {matchesData} = this.state
-    const {teamBannerUrl, latestMatchDetails} = matchesData
+    const {teamMatchList, matchStatistics} = this.state
+    console.log('matchStatistics:', matchStatistics)
+    const {teamBannerUrl, latestMatchDetails} = teamMatchList
+    console.log(latestMatchDetails)
+    const pieChartData = [
+      {name: 'Wins', value: matchStatistics.wins},
+      {name: 'Losses', value: matchStatistics.losses},
+      {name: 'Draws', value: matchStatistics.draws},
+    ]
+    console.log(pieChartData)
+    const getColor = name => {
+      if (name === 'Wins') {
+        return '#008000'
+      }
+      if (name === 'Losses') {
+        return '#FF0000'
+      }
+      return '#800080'
+    }
     return (
-      <div className="team-matches-container">
-        <img src={teamBannerUrl} alt="team Banner" className="team-banner" />
-        <div>{this.renderTeamStats()}</div>
-        <LatestMatch latestMatch={latestMatchDetails} />
-        {this.renderRecentMatchesList()}
+      <div className="team-match-container">
+        <Link to="/">
+          <button type="submit" className="back-btn">
+            Back
+          </button>
+        </Link>
+
+        <div className="chart-container">
+          <PieChart width={400} height={400}>
+            <Pie
+              data={pieChartData}
+              dataKey="value"
+              nameKey="name"
+              labelLine={false}
+              outerRadius={80}
+              cx="50%"
+              cy="50%"
+              fill="#8884d8"
+              label={({name, percent}) =>
+                `${name} ${(percent * 100).toFixed(0)}%`
+              }
+            >
+              {pieChartData.map((entry, index) => (
+                <Cell key={`cell-${entry.name}`} fill={getColor(entry.name)} />
+              ))}
+            </Pie>
+            <Legend />
+          </PieChart>
+        </div>
+        <img src={teamBannerUrl} alt="team banner" className="banner-image" />
+        <LatestMatch latestMatchDetails={latestMatchDetails} />
+        {this.renderRecentMatches()}
       </div>
     )
   }
 
-  renderTeamStats = () => {
-    let won = 0
-    let loss = 0
-    let draw = 0
+  renderLoader = () => (
+    <div className="loader-container">
+      <Loader type="Oval" color="#ffffff" height={50} width={50} />
+    </div>
+  )
 
-    const {matchesData} = this.state
-    const {recentMatches} = matchesData
-    for (let i = 0; i < recentMatches.length; i += 1) {
-      console.log(recentMatches[i])
-      const result = recentMatches[i].matchStatus
-      if (result === 'Won') {
-        won = won + 1
-      } else if (result === 'Loss') {
-        loss = loss + 1
-      } else {
-        draw = draw + 1
-      }
-    }
-    const data = [
-      {name: 'Won', students: won},
-      {name: 'Loss', students: loss},
-      {name: 'Draw', students: draw},
-    ]
-
+  renderRecentMatches = () => {
+    const {teamMatchList} = this.state
+    const {recentMatches} = teamMatchList
     return (
-      <PieChart width={730} height={250}>
-        <Pie
-          data={data}
-          dataKey="students"
-          nameKey="name"
-          cx="50%"
-          cy="50%"
-          outerRadius={250}
-          fill="#8884d8"
-        />
-      </PieChart>
-    )
-  }
-
-  renderRecentMatchesList = () => {
-    const {matchesData} = this.state
-    const {recentMatches} = matchesData
-    return (
-      <ul className="recent-matches-list">
-        {recentMatches.map(eachMatch => (
-          <MatchCard matchData={eachMatch} key={eachMatch.id} />
+      <ul className="ul-container">
+        {recentMatches.map(each => (
+          <MatchCard key={each.id} recentMatches={each} />
         ))}
       </ul>
     )
   }
 
-  renderLoader = () => (
-    <div className="loader-container" testid="loader">
-      <Loader type="BallTriangle" color="#00BFFF" height={80} width={80} />
-    </div>
-  )
-
   render() {
     const {isLoading} = this.state
-    const {match} = this.props
-    const {params} = match
-    const {id} = params
+
+    const className = `app-team-container ${this.getTeamClassName()}`
     return (
-      <div className={`app-team-matches-container ${id}`}>
-        <div>
-          <Link to="/">Back</Link>
-        </div>
+      <div className={className}>
         {isLoading ? this.renderLoader() : this.renderTeamMatches()}
       </div>
     )
